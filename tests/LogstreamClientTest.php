@@ -43,12 +43,12 @@ it('omits metadata key when null', function () {
     });
 });
 
-it('does not throw on HTTP error', function () {
-    Http::fake([
-        'logger.borgstein.io/api/logs' => Http::response(['error' => 'Invalid API key'], 401),
-    ]);
+it('does not throw on network error', function () {
+    Http::fake(function () {
+        throw new \Illuminate\Http\Client\ConnectionException('Connection refused');
+    });
 
-    $client = new LogstreamClient('bad-key', 'https://logger.borgstein.io');
+    $client = new LogstreamClient('test-key', 'https://logger.borgstein.io');
 
-    expect(fn () => $client->send('INFO', 'test'))->not->toThrow(Exception::class);
+    expect(fn () => $client->send('INFO', 'test'))->not->toThrow(\Throwable::class);
 });

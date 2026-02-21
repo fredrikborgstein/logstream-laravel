@@ -20,18 +20,38 @@ class LogstreamLogger implements LoggerInterface
         'emergency' => 'ERROR',
     ];
 
+    private const LEVEL_ORDER = [
+        'debug'     => 0,
+        'info'      => 1,
+        'notice'    => 1,
+        'warning'   => 2,
+        'warn'      => 2,
+        'error'     => 3,
+        'critical'  => 3,
+        'alert'     => 3,
+        'emergency' => 3,
+    ];
+
     public function __construct(
         private readonly LogstreamClient $client,
         private readonly bool $async,
+        private readonly string $minLevel = 'debug',
     ) {}
 
     public function log($level, \Stringable|string $message, array $context = []): void
     {
-        $mappedLevel = self::LEVEL_MAP[strtolower((string) $level)] ?? 'INFO';
+        $normalizedLevel = strtolower((string) $level);
+        $minOrder = self::LEVEL_ORDER[$this->minLevel] ?? 0;
+        $thisOrder = self::LEVEL_ORDER[$normalizedLevel] ?? 0;
+        if ($thisOrder < $minOrder) {
+            return;
+        }
+
+        $mappedLevel = self::LEVEL_MAP[$normalizedLevel] ?? 'INFO';
         $metadata    = empty($context) ? null : $context;
 
         if ($this->async) {
-            SendLogJob::dispatch($this->client->getApiKey(), $this->client->getBaseUrl(), $mappedLevel, (string) $message, $metadata);
+            SendLogJob::dispatch($mappedLevel, (string) $message, $metadata);
             return;
         }
 

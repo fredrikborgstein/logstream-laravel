@@ -12,7 +12,7 @@ it('dispatches HTTP call via LogstreamClient when handled', function () {
         'logger.borgstein.io/api/logs' => Http::response(['id' => 'abc'], 201),
     ]);
 
-    $job = new SendLogJob('test-key', 'https://logger.borgstein.io', 'WARN', 'test message', ['x' => 1]);
+    $job = new SendLogJob('WARN', 'test message', ['x' => 1]);
     $job->handle(new LogstreamClient('test-key', 'https://logger.borgstein.io'));
 
     Http::assertSent(function ($request) {

@@ -21,6 +21,7 @@ class LogstreamServiceProvider extends ServiceProvider
             return new LogstreamLogger(
                 $app->make(LogstreamClient::class),
                 (bool) $app['config']['logstream.async'],
+                (string) ($app['config']['logstream.level'] ?? 'debug'),
             );
         });
     }

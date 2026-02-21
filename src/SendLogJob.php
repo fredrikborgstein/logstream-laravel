@@ -13,11 +13,9 @@ class SendLogJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        private readonly string  $apiKey,
-        private readonly string  $baseUrl,
-        private readonly string  $level,
-        private readonly string  $message,
-        private readonly ?array  $metadata = null,
+        private readonly string $level,
+        private readonly string $message,
+        private readonly ?array $metadata = null,
     ) {}
 
     public function handle(LogstreamClient $client): void
