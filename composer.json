@@ -1,6 +1,13 @@
 {
   "name": "borgstein/logstream-laravel",
   "description": "Laravel client for the Logstream logging API",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fredrik Borgstein",
+      "email": "fredrik@borgstein.io"
+    }
+  ],
   "type": "library",
   "require": {
     "php": "^8.1",
