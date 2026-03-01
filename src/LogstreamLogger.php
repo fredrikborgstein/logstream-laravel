@@ -59,8 +59,8 @@ class LogstreamLogger implements LoggerInterface
     }
 
     /** Called by Laravel's log channel factory. */
-    public function __invoke(array $config): self
+    public function __invoke(array $config): \Monolog\Logger
     {
-        return $this;
+        return new \Monolog\Logger('logstream', [new \Monolog\Handler\PsrHandler($this)]);
     }
 }
