@@ -17,13 +17,15 @@ class LogstreamServiceProvider extends ServiceProvider
             );
         });
 
-        $this->app->singleton('logstream', function ($app) {
+        $this->app->singleton(LogstreamLogger::class, function ($app) {
             return new LogstreamLogger(
                 $app->make(LogstreamClient::class),
                 (bool) $app['config']['logstream.async'],
                 (string) ($app['config']['logstream.level'] ?? 'debug'),
             );
         });
+
+        $this->app->alias(LogstreamLogger::class, 'logstream');
     }
 
     public function boot(): void
